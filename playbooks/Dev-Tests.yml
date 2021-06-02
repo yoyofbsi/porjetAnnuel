@@ -1,0 +1,43 @@
+---
+
+- name: Only for gather info
+  hosts: all
+  gather_facts: yes
+
+- import_playbook: OS-Install-utils.yml
+
+# - name: Percona
+#   hosts: dbservers
+#   gather_facts: no
+#   roles:
+#     - { role: percona, when execution_lock is not defined }
+
+- name: ProxySQL
+  hosts: webservers
+  gather_facts: no
+  roles:
+    - { role: proxysql, when execution_lock is not defined }
+
+# - name: Nginx
+#   hosts: webservers
+#   gather_facts: no
+#   roles:
+#     - { role: nginx, when execution_lock is not defined }
+
+# - name: Orchestrator
+#   hosts: dbservers
+#   gather_facts: no
+#   roles:
+#     - { role: orchestrator, when execution_lock is not defined }
+
+# - name: HAProxy
+#   hosts: haservers
+#   gather_facts: no
+#   roles:
+#     - { role: ha-proxy, when execution_lock is not defined }
+
+# - name: Heartbeat
+#   hosts: haservers
+#   gather_facts: no
+#   roles:
+#     - { role: heartbeat, when execution_lock is not defined}

@@ -1,0 +1,43 @@
+---
+
+################################ Téléchargement / Installation d'Orchestrator ###########################################
+
+
+- name: Installation des paquets avant Orchestrator (Debian)
+  become: yes
+  apt:
+    name: "{{ deb_orch_preresquites }}"
+    state: latest
+  when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "10" )
+
+- name: Téléchargement d'Orchestrator via Github (Debian)
+  become: yes
+  get_url:
+    url: "{{ deb_orch[item].url }}"
+    dest: /tmp/
+    checksum: "sha256:{{ deb_orch[item].checksum }}"
+  with_items:
+    - orch
+    - orch-cli
+    - orch-client
+  when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "10" )
+
+- name: Installation d'Orchestrator (Debian)
+  become: yes
+  apt:
+    deb: "/tmp/{{ item }}"
+    state: present
+  with_items: "{{ deb_orch_install }}"
+  when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "10" )
+
+- name: Vérification de l'existence du fichier orchestrator-sample.conf.json (Debian)
+  become: yes
+  stat: path="/usr/local/orchestrator/orchestrator-sample.conf.json"
+  register: orch_conf_stat
+
+- name: Déplacement et renommage du fichier orchestrator-sample.conf.json (Debian)
+  become: yes
+  command: mv /usr/local/orchestrator/orchestrator-sample.conf.json /etc/orchestrator.conf.json
+  when: (orch_conf_stat.stat.exists) 
+
+- include: orchestrator-conf.yml

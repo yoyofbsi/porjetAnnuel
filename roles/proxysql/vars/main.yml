@@ -1,0 +1,6 @@
+---
+
+psql:
+    user: admin2
+    mdp: admin2 #a envoyer dans le vault
+

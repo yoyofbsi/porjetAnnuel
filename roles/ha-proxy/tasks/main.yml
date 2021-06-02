@@ -1,0 +1,33 @@
+---
+
+################################ Installation & Configuration de HAProxy ###########################################
+
+- name: Installation de HAProxy (Debian)
+  become: yes
+  apt:
+    name: "haproxy"
+    state: latest
+  when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "10" )
+
+- name: Ajout du fichier de configurations
+  become: yes
+  template:
+    src: templates/haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    mode: "0640"
+
+- name: Désactivation de haproxy au démarrage
+  become: yes
+  service: 
+    name: "haproxy" 
+    state: stopped
+    enabled: no
+  
+- name: Activation de haproxy sur le serveur primaire
+  become: yes
+  service: 
+    name: "haproxy" 
+    state: started
+  when: primary == "yes"
+
+  

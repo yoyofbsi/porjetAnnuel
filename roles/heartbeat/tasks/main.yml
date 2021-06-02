@@ -1,0 +1,28 @@
+---
+
+################################ Installation & Configuration Heartbeat ###########################################
+
+# Et pacemaker ?
+- name: Installation de heartbeat (Debian)
+  become: yes
+  apt:
+    name: "heartbeat"
+    state: latest
+  when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "10" )
+
+- name: Ajout des fichiers de configurations
+  become: yes
+  template:
+    src: templates/{{ item }}.j2
+    dest: /etc/heartbeat/{{ item }}
+    mode: "{{ heartbeat_file[item].mode }}"
+  with_items:
+          - "authkeys"
+          - "haresources"
+          - "ha.cf"
+        
+- name: Start service Heartbeat
+  become: yes
+  service: 
+    name: "heartbeat" 
+    state: started

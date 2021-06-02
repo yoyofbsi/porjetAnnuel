@@ -1,0 +1,21 @@
+# debut du fichier
+
+server {
+listen 80; # permet d'ennoncer qu'on ecoute sur le port 80
+
+server_name _; #permet de preciser qu'on travail sur l'adersse IP locale sachant qu'on a pas de nom de domaine
+
+root /var/www/wordpress; # c'est l'emplacement du site en local
+
+location ~* \.php$ {
+    fastcgi_pass unix:/run/php/php7.3-fpm.sock; ## va préciser qu'on va ouvrir toutes les pages php avec cet outil
+    include         fastcgi_params;
+    fastcgi_param   SCRIPT_FILENAME    $document_root$fastcgi_script_name; # va par la suite améliorer les perfs du cache avec des scripts
+    fastcgi_param   SCRIPT_NAME        $fastcgi_script_name;	# va par la suite améliorer les perfs du cache avec des scripts
+  }
+
+index index.php; #initialise la page de l'index
+
+}
+
+# Fin du fichier

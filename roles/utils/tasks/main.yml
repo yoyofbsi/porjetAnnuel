@@ -1,0 +1,67 @@
+---
+
+- include: "repo.yml"
+
+- include: "ntp.yml"
+  when: use_ntp is defined and use_ntp != 0
+
+# Peut être enlevé/changé en production
+- name: Ajout du fichier hosts
+  become: yes
+  template:
+    src: templates/hosts.j2
+    dest: /etc/hosts
+
+- name: Désactivation des repo CD (Debian)
+  become: yes
+  lineinfile:
+    path: /etc/apt/sources.list
+    regexp: "^deb cdrom"
+    state: absent
+  when: ansible_distribution == "Debian"
+
+- name: Installation des paquets essentiels à toutes machines (Debian)
+  become: yes
+  apt:
+    name: "{{ Packages_Debian }}"
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "Debian"
+
+- name: Installation du module pexpect
+  become: yes
+  pip:
+    name: pexpect
+    state: latest
+
+- name: Récupération de la version courante d'Atop
+  shell: "atop -V | cut -d ' ' -f2"
+  register: atop_version
+
+- name: Modification du script de démarrage d'Atop (si version < 2.4.0)
+  become: yes
+  lineinfile:
+    path: /usr/share/atop/atop.daily
+    regexp: "^INTERVAL="
+    line: "INTERVAL={{ atop_default_interval }}"
+  when: atop_version.stdout is version("2.4.0", operator='<', strict=True)
+
+- name: Modification de l'intervalle de rafraichissement d'Atop (si version >= 2.4.0) (Debian)
+  become: yes
+  lineinfile:
+    path: /etc/default/atop
+    regexp: "^LOGINTERVAL="
+    line: "LOGINTERVAL={{ atop_default_interval }}"
+  when: ansible_distribution == "Debian" and atop_version.stdout is version("2.4.0", operator='>=')
+
+- name: (re)Démarrage de Atop en tâche de fond
+  become: yes
+  service:
+    name: atop
+    state: restarted
+
+- name: Activation de Atop au démarrage du système
+  become: yes
+  service:
+    name: atop
+    enabled: yes

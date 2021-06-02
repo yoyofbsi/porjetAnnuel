@@ -1,0 +1,21 @@
+autojoin none
+# Quelle carte réseau utiliser pour les broadcasts Heartbeat
+bcast {{ network_card }}
+# Indication du fichier de log
+logfile /var/log/heartbeat.log
+# Les logs heartbeat seront gérés par syslog, dans la catégorie daemon
+logfacility daemon
+# On liste tous les membres de notre cluster heartbeat (par les noms de préférences)
+{% for _host in groups["haservers"] %}
+node {{ hostvars[_host]["ansible_hostname"] }}
+{% endfor %}
+# On définit la périodicité de controle des noeuds entre eux (en seconde)
+keepalive 1
+warntime 3
+# Au bout de combien de seconde un noeud sera considéré comme "mort"
+deadtime 6
+initdead 60
+# Adresse du routeur pour vérifier la connexion au net
+#ping {{ router_ip }}
+# Rebascule-t-on automatiquement sur le primaire si celui-ci redevient vivant ? oui*
+auto_failback no

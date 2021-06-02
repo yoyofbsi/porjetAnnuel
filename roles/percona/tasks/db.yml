@@ -1,0 +1,82 @@
+---
+
+############################## Modification des utilisateurs Root ####################################
+
+- name: "Vérification de nouvelle installation Percona"
+  become: yes
+  no_log: true
+  stat:
+    path: "/root/.ansible.percona.install"
+  register: root_pass_changed
+
+- name: COMMANDE | Read_only avant changement
+  become: yes
+  command: mysql -u root -p"{{mysql_root_passwd}}" -e "SET @@GLOBAL.read_only = ON;";
+  changed_when: true
+  when: 
+    - ( ansible_distribution == "Debian" and ansible_distribution_major_version == "10" )
+    - root_pass_changed.stat.exists == False
+
+- name: Mise à jour du mdp root pour tout les comptes root (Debian 10)
+  become: yes
+  ignore_errors: yes
+  no_log: true
+  community.mysql.mysql_user:
+    login_user: "root"
+    name: "root" 
+    host: "{{ item }}"
+    password: "{{ mysql_root_passwd }}"
+    priv: "*.*:ALL,GRANT"
+    check_implicit_admin: yes
+    sql_log_bin: no
+  with_items:
+          - "{{ ansible_hostname }}"
+          - "127.0.0.1"
+          - "localhost"
+  when: 
+    - ( ansible_distribution == "Debian" and ansible_distribution_major_version == "10" )
+    - root_pass_changed.stat.exists == False
+
+- name: Mise à jour du mdp root pour tout les comptes root (protection de rejeu)
+  become: yes
+  ignore_errors: yes
+  no_log: true
+  community.mysql.mysql_user:
+    login_user: root
+    login_password: "{{ mysql_root_passwd }}"  
+    name: root 
+    host: "{{ item }}"
+    password: "{{ mysql_root_passwd }}"
+    state: present
+    check_implicit_admin: yes
+    sql_log_bin: no
+  with_items:
+          - "{{ ansible_hostname }}"
+          - "127.0.0.1"
+          - "localhost"
+
+- name: "Copie du fichier .ansible.percona.install dans le dossier /root"
+  become: yes
+  no_log: true
+  template:
+    src: root-my-cnf.j2
+    dest: /root/.pass.changed.mysql
+    owner: root
+    group: root
+    mode: 0600
+
+# Voir pour ajouter un fichier de credentials pour les appel des hooks Orchestrator
+
+- name: Suppression des utilisateurs anonymes
+  become: yes
+  no_log: true
+  community.mysql.mysql_user:
+    login_user: "root"
+    login_password: "{{ mysql_root_passwd }}"
+    name: ''
+    host_all: yes
+    state: absent
+    sql_log_bin: no
+    
+
+- include: replication-GTID.yml

@@ -1,0 +1,58 @@
+---
+
+########################## Paquets / Dépôts ###################################
+
+deb_nginx_php:
+    - curl
+    - git
+    - unzip 
+    - haveged 
+    - nginx
+    - nginx-extras
+    - php-common
+    - php-pear
+    - php-redis
+    - redis
+    - php-zip
+    - php7.3-cli
+    - php7.3-common
+    - php7.3-curl
+    - php7.3-dev
+    - php7.3-fpm
+    - php7.3-gd
+    - php7.3-imap
+    - php7.3-intl
+    - php7.3-json
+    - php7.3-mbstring
+    - php7.3-mysql
+    - php7.3-opcache
+    - php7.3-pspell
+    - php7.3-readline
+    - php7.3-recode
+    - php7.3-snmp
+    - php7.3-tidy
+    - php7.3-xml
+    - php7.3-zip
+    - php7.3-mysql
+    - php7.3-fpm
+
+
+############## Variables Percona / Orchestrator / Proxysql ######################
+
+# wordpress: 
+#     topologyUser: orchestrator
+#     topologyPassword: orchestrator
+#     user: orchestrator
+#     password: orchestrator
+
+#server_id: "{{ inventory_hostname | ansibleHostnameNumber }}"
+
+orch_alias: webservers
+
+############################ Variables à mettre dans le Vault ######################################################
+
+rep_passwd: root
+
+#psql: mdp: admin2
+
+#orchestrator: password: orchestrator

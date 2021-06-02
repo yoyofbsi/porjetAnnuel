@@ -1,0 +1,60 @@
+---
+
+########################## Paquets / Dépôts ###################################
+
+orch_version: "3.2.3"
+
+deb_orch_preresquites:
+    - jq
+
+
+deb_orch:
+    orch:
+        url: https://github.com/openark/orchestrator/releases/download/v{{ orch_version}}/orchestrator_{{ orch_version}}_amd64.deb
+        checksum: e1e5cb51973c45500c5de7f487378d7dc5a478d468850e9d228d1907e3fe5773
+    orch-cli:
+        url: https://github.com/openark/orchestrator/releases/download/v{{ orch_version}}/orchestrator-cli_{{ orch_version}}_amd64.deb
+        checksum: f4b6962fb87811350f63e1ee6132b74eeb9a56c710a5bb9d7d43bae4d342e354
+    orch-client:
+        url: https://github.com/openark/orchestrator/releases/download/v{{ orch_version}}/orchestrator-client_{{ orch_version}}_amd64.deb
+        checksum: b63d5ee473684e69760b65db91bdd83daffbee2b75fb19a2d7a5746e178bc943
+
+deb_orch_install:
+    - "orchestrator_{{ orch_version}}_amd64.deb"
+    - "orchestrator-cli_{{ orch_version}}_amd64.deb"
+    - "orchestrator-client_{{ orch_version}}_amd64.deb"
+
+############## Variables Percona / Orchestrator / Proxysql ######################
+
+orch_log: /var/log/orchestrator/orch.log
+
+orch_error_log: /var/log/orchestrator/error.log
+
+psql:
+    user: admin2
+    mdp: admin2 #a envoyer dans le vault
+
+# mysqldb: 
+#     user: root
+#     mdp: gf6543e54
+#     repl_user: repl_user
+#     repl_mdp: root
+
+orchestrator: 
+    topologyUser: orchestrator
+    topologyPassword: orchestrator #a envoyer dans le vault
+    user: orchestrator
+    password: orchestrator #a envoyer dans le vault
+
+server_id: "{{ inventory_hostname | ansibleHostnameNumber }}"
+
+#ne fonctionne pas ?
+orch_alias: dbservers
+
+############################ Variables à mettre dans le Vault ######################################################
+
+rep_passwd: root
+mysql_root_passwd: eFDVv8f54s56
+#psql: mdp: admin2
+
+#orchestrator: password: orchestrator

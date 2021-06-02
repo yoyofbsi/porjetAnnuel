@@ -1,0 +1,23 @@
+- name: Installation du paquet apt-transport-https requis pour l'installation du répo Sury (Debian)
+  become: yes
+  apt:
+    name: "apt-transport-https"
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "Debian"
+
+- name: Installation de la clé publique pour le dépôt Sury (Debian)
+  become: yes
+  apt_key:
+    url: "{{ Sury_key }}"
+    state: present
+  retries: 5
+  delay: 3
+  when: ansible_distribution == "Debian"
+
+- name: Installation du dépôt Sury (Debian)
+  become: yes
+  apt_repository:
+    repo: "{{ Sury_repo }}"
+    state: present
+  when: ansible_distribution == "Debian"

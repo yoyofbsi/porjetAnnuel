@@ -1,0 +1,8 @@
+---
+
+haproxy_port: 80
+
+# Variable local à gérer par l'utilisateur
+primary:
+    node: Debian10-Balencer1
+    ip: "172.16.31.140"

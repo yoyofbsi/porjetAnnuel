@@ -1,0 +1,8 @@
+---
+
+- name: Restart service nginx
+  become: yes
+  service: 
+    name: "nginx" 
+    state: restarted
+  listen: "Restart service Nginx"

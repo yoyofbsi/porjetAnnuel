@@ -1,0 +1,52 @@
+---
+
+Percona_deb_repo: "https://repo.percona.com/apt/percona-release_latest.{{ ansible_lsb.codename }}_all.deb"
+
+Percona_rpm_repo: "https://repo.percona.com/yum/percona-release-latest.noarch.rpm"
+Percona_key: "https://www.percona.com/downloads/percona-release/RPM-GPG-KEY-percona"
+
+
+Percona_Debian_preresquites:
+  - python-mysqldb
+  - python-pycurl
+  - python3
+  - python3-mysqldb
+  - gnupg2
+  - curl 
+  
+Percona_Debian:
+  - percona-server-server
+  - percona-toolkit
+  - percona-xtrabackup-80
+
+percona_repo_version: ps80
+
+datadir: "/var/lib/mysql"
+
+server_id: "{{ inventory_hostname | regex_replace('[^0-9]','') | regex_replace('^[0]')  }}" #ansibleHostnameNumber }}"
+
+increment_offset: "{{ inventory_hostname | mysqlParityOffset }}"
+
+socket_dir: "{% if ansible_distribution == 'Debian' %}/var/run/mysqld/mysqld.sock{% else %}/var/lib/mysql/mysql.sock{% endif %}"
+
+
+##################### Variables ProxySQL et Orchestrator à garder de côté #########################################
+
+psql:
+    user: admin_ox
+    mdp: admin_ox
+    log_path: /var/log/Orch_log.txt
+    log_error_path: /var/log/Orch_error.txt
+
+
+
+orchestrator: 
+    topologyUser: orchestrator
+    topologyPassword: orchestrator
+    user: orchestrator
+    password: orchestrator
+
+############################ Variables à mettre dans le Vault ######################################################
+
+rep_passwd: root
+mysql_root_passwd: eFDVv8f54s56

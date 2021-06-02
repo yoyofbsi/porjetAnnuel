@@ -1,0 +1,23 @@
+---
+
+network_card: "ens18"
+router_ip: "172.16.16.3"
+netmask_cidr: "20"
+
+# Variable local à gérer par l'utilisateur
+primary:
+    node: Debian10-Balencer1
+    ip: "172.16.31.140"
+
+heartbeat_file:
+    ha.cf:
+        mode: "0640"
+    authkeys:
+        mode: "0600"
+    haresources:
+        mode: "0640"
+
+
+# A mettre dans le vault
+# Mot de passe chiffré en SHA1
+heartbeat_key: b823c367873ddfe91e2ca9393e8ffc34b28c63db

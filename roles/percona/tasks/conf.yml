@@ -1,0 +1,48 @@
+---
+
+############################### Démarrage/Activation de Percona #######################################
+
+- name: Activation du service MySQL au démarrage (Debian 10)
+  become: yes
+  service:
+    name: mysql
+    enabled: yes
+  when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "10" )
+
+#################################### Configuration de Percona ###########################################
+
+
+- name: Création du répértoire de configuration MySQL
+  become: yes
+  file:
+    path: /etc/mysql/percona-server.conf.d
+    state: directory
+    owner: mysql
+    group: mysql
+
+- name: "Copie du fichier de configuration my.cnf "
+  become: yes
+  template:
+    src: templates/my.cnf.j2
+    dest: /etc/my.cnf
+    owner: mysql
+    group: mysql
+    mode: '0644'
+  register: cnfMySQL
+
+- name: Modification du fichier mysqld.cnf
+  become: yes
+  template:
+    src: templates/mysqld.cnf.j2
+    dest: /etc/mysql/percona-server.conf.d/mysqld.cnf
+    mode: '0644'
+  register: cnfPerc
+
+- name: Restart service MySQL
+  become: yes
+  service: 
+    name: mysql
+    state: restarted
+  when: cnfPerc.changed or cnfMySQL.changed
+
+- include: db.yml
