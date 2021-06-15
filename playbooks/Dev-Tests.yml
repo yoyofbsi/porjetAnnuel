@@ -41,3 +41,9 @@
 #   gather_facts: no
 #   roles:
 #     - { role: heartbeat, when execution_lock is not defined}
+
+# - name: hardening
+#   hosts: all
+#   gather_facts: no
+#   roles:
+#     - { role: hardening, when execution_lock is not defined }

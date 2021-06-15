@@ -1,0 +1,55 @@
+---
+
+- name: Installation de fail2ban (Debian)
+  become: yes
+  apt:
+    name: fail2ban
+    state: latest
+  when: ansible_distribution == "Debian"
+
+- name: Vérification de l'existence de jail.local
+  become: yes
+  stat:
+    path: "/etc/fail2ban/jail.local"
+  register: fail2ban_jail_local
+
+- name: Copie du fichier jail.conf en jail.local
+  become: yes
+  copy:
+    src: /etc/fail2ban/jail.conf
+    dest: /etc/fail2ban/jail.local
+    remote_src: yes
+    mode: '0644'
+  notify: "Restart service fail2ban"
+  when: fail2ban_jail_local.stat.exists != true
+
+- name: Modification du temps de banissement
+  become: yes
+  replace: 
+    dest: "/etc/fail2ban/jail.local" 
+    regexp: "^bantime.*" 
+    replace: "bantime = {{ bantime }}"
+  notify: "Restart service fail2ban"
+
+- name: Modification du nombre de tentatives
+  become: yes
+  replace: 
+    dest: "/etc/fail2ban/jail.local" 
+    regexp: "^maxretry.*"
+    replace: "maxretry = {{ maxretry }}"
+  notify: "Restart service fail2ban"
+
+- name: Modification du temps entre les tentatives
+  become: yes
+  replace: 
+    dest: "/etc/fail2ban/jail.local" 
+    regexp: "^findtime.*"
+    replace: "findtime = {{ findtime }}"
+  notify: "Restart service fail2ban"
+
+- name: Activation et lancement de Fail2ban
+  become: yes
+  service:
+    name: fail2ban
+    state: started
+    enabled: true
