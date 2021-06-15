@@ -1,39 +1,48 @@
-# Ansible
+# Hard'Taumate
 
-Bienvenue sur la page d'accueil de la documentation sur Ansible et les déploiements.
+Bienvenue sur la page d'accueil de notre projet de déploiement d'infrastructure HA sécurisé.
 
-L'objectif de cette documentation est de de recenser au mieux les différents aspects que nous utilisons sur Ansible, de la documentation sur diverses parties de code, de variables ou bien des bonnes pratiques.
+L'objectif de cette documentation est de de recenser les différentes parties importantes à maitriser pour un déploiement.
 
-Pour toute page existante mais toujours en cours de construction, merci de mettre "WIP" (Work in Progress) au début de la page du contenu en question.
+## Environnement compatible
 
-## L'environnement de développement
+  * Debian 10
 
-  * [Le fonctionnement du workflow de développement Ansible](https://gitlab.com/openxtrem/ansible/-/wikis/Workflow-de-développement-Ansible)
+## Logiciels utilisés
+
+  * Heartbeat
+  * HAProxy
+  * Nginx
+  * ProxySQL
+  * Percona Server
+  * Orchestrator
 
 
 ## Les fondamentaux
 
-  * [Utiliser Ansible pour réaliser des déploiements Mediboard](https://gitlab.com/openxtrem/ansible/-/wikis/Utiliser-Ansible-pour-réaliser-des-déploiements-Mediboard)
+  * [Utiliser Ansible pour réaliser un déploiement](ajouter un lien vers une page explicative)
 
-  * [Créer et éditer le fichier de variables d'une infrastructure](https://gitlab.com/openxtrem/ansible/-/wikis/Créer-et-éditer-le-fichier-de-variables-d'une-infra)
+  * [Créer et éditer le fichier de variables d'une infrastructure](ajouter un lien vers une page explicative)
 
-  * [Utiliser la fonction de prompt](https://gitlab.com/openxtrem/ansible/-/wikis/Utiliser-la-fonction-de-prompt)
+  * [Utiliser un coffre fort de mot de passe (vault)](ajouter un lien vers une page explicative)
 
-## Les fonctionnalités concernant le système d'exploitation
-
-  * [Gérer des utilisateurs systèmes](https://gitlab.com/openxtrem/ansible/-/wikis/Gestion-des-utilisateurs-linux)
-
-  * [Permettre des accès sFTP à des utilisateurs systèmes](https://gitlab.com/openxtrem/ansible/-/wikis/Permettre-à-des-utilisateurs-systèmes-des-accès-sFTP)
-  
 
 ## Les fonctionnalités concernant le middleware 
 
-  * [Créer des VirtualHosts Apache](https://gitlab.com/openxtrem/ansible/-/wikis/Créer-des-VirtualHost-Apache-sous-forme-de-variable)
+  * [Créer des VirtualHosts Apache](ajouter un lien vers une page explicative) (Si possibilité de créer plusieurs sites à la volée)
 
-  * [Effectuer une mise à jour mineure ou majeure du middleware front](https://gitlab.com/openxtrem/ansible/-/wikis/Effectuer-une-mise-à-jour-mineure-ou-majeure-du-middleware-front)
+## Front (Heartbeat + HAProxy)
+  
+  * Heartbeat est un logiciel permettant d'empêcher un SPOF en configuré à la volée une adresse IP virtuelle et en lançant HAProxy.
+  * HAProxy est un logiciel qui sert de load-balancer pour les serveur Web. Il permet de repartir la charge, et de ne renvoyer que vers les serveurs actifs.
 
-## Les fonctionnalités concernant le mediboard
+## Middle (Nginx + ProxySQL)
 
-  * [Gérer des instances Mediboard](https://gitlab.com/openxtrem/ansible/-/wikis/Gestion-des-instances-Mediboard-dans-Ansible)
+  * Nginx est un logiciel permettant d'hébérger un ou plusieurs serveurs Web.
+  * ProxySQL permet de gérer la connexion entre les serveurs Web et les serveurs SQL. Il sert aussi de load-balancer et transfert les requêtes au bon serveur en fonction de l'état Read-Only (sur les serveurs SQL)
 
-  * [Déployer les prérequis techniques pour le DMP](https://gitlab.com/openxtrem/ansible/-/wikis/Mise-en-place-des-prérequis-techniques-pour-le-DMP)
+## Back (Percona-server + Orchestrator)
+
+  * Percona-server est une base de données relationnelle.
+  * Orchestrator permet de gérer automatiquement le failover d'une base de données.
+  * 
