@@ -1,0 +1,66 @@
+<html>
+
+        <?php
+        include('head.php'); //inclus le haut  de la page
+        ?>
+
+
+        <?php
+        echo "<center>";
+        echo "<h1><br>D'où vient-on?</h1>";
+        $header_ip_client = getenv('X-Forwarded-For');
+        $header_ip_ha = getenv('HAip');#$_SERVER['HAip'];
+        $headers = apache_request_headers();
+
+        foreach ($headers as $header => $value) {
+
+                if ($header == 'X-Forwarded-For') {
+                        echo "L'ip du client est : <b>$value</b>."."<br>"."<br>"        ;
+                }
+
+
+                if ($header == 'Haip') {
+                        $hostnameHAproxy = gethostbyaddr($value);
+                        echo "Le HAproxy qui transfert la requête est youhou le suivant : <b>$hostnameHAproxy</b>. Son IP est la : <b>$value</b>."."<br>"."<br>";
+                }
+
+                }
+
+        ?>
+
+        <h1>Où sommes nous ? </h1>
+        <?php
+                $localIP = $_SERVER['SERVER_ADDR'];
+                $nomMachine = gethostname();
+                echo "Nous sommes sur le serveur web : <b>$nomMachine</b> qui a pour IP: <b>$localIP</b>.<br>.<br> ";
+        ?>
+
+        <h1>Où allons nous?</h1>
+        <?php
+        include('config.php');
+        $req = $bdd->prepare('SELECT hostname FROM mysql_servers WHERE hostgroup_id="0"');
+        $req->execute();
+        $resultat = $req->fetch();;
+        $resultat = $resultat[0];
+        $hostnameMaitre = gethostbyaddr($resultat);
+
+        echo "Le serveur SQL Master est :  <b>$hostnameMaitre</b>. Son IP est la: <b>$resultat</b>.<br>";
+		
+		$req = $bdd->prepare('SELECT hostname FROM mysql_servers WHERE hostgroup_id="1"');
+        $req->execute();
+        /*$resultat = $req->fetch();;*/
+		$nbSlave = 1;
+		while ($donnees = $req->fetch()){
+			$hostnameSlave = gethostbyaddr($donnees[0]);
+			echo "Le serveur SQL SLAVE $nbSlave est :  <b>$hostnameSlave</b>. Son IP est la: <b>$donnees[0]</b>.<br>";
+			$nbSlave = $nbSlave+1;
+		}
+		
+		echo "$value";
+		
+        echo "</center>";
+        ?>
+
+</body>
+
+</html>

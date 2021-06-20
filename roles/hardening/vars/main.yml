@@ -45,7 +45,7 @@ online: "{{ line.to_delete[0] }}|{{ line.to_delete[1] }}|{{ line.to_delete[2] }}
 ## Valeurs par défaut possiblement écrasable
 lynis_autorized_user:
   - "{{ ansible_user }}"
-  - "{{ administrateur }}" #à rentrer dans les variables locales pour ajouter des administrateurs
+  #- "{{ administrateur }}" #à rentrer dans les variables locales pour ajouter des administrateurs
 administrateur: ""
 
 # Valeur par défaut "On", peut être écraser par n'importe quoi en local pour passer la tâche

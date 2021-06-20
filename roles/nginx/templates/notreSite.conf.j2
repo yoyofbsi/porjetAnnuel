@@ -1,0 +1,32 @@
+### debut du fichier ###
+
+server {
+listen 80;
+
+server_name _;
+return 301 https://$host$request_uri;
+
+}
+
+server {
+
+listen 443 ssl;
+
+server_name _;
+
+root /var/www/nouveauSite;
+index index.php;
+
+ssl_certificate /etc/nginx/ssl/certificat.crt;
+ssl_certificate_key     /etc/nginx/ssl/certificat.key;
+
+
+location ~* \.php$ {
+    fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+    include         fastcgi_params;
+    fastcgi_param   SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+    fastcgi_param   SCRIPT_NAME        $fastcgi_script_name;
+  }
+}
+
+### Fin du fichier ###

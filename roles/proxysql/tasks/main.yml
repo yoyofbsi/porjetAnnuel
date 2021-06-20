@@ -1,8 +1,9 @@
 ---
 
-################################ Téléchargement / Installation d'Orchestrator ###########################################
+################################ Téléchargement / Installation de ProxySQL ###########################################
 
 - name: Ajout de la clé de dépôt ProxySQL
+  become: yes
   apt_key:
     url: "https://repo.proxysql.com/ProxySQL/repo_pub_key"
     state: present

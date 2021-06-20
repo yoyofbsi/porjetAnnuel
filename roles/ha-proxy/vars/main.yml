@@ -6,3 +6,5 @@ haproxy_port: 80
 primary:
     node: Debian10-Balencer1
     ip: "172.16.31.140"
+
+server_id: "{{ inventory_hostname | ansibleHostnameNumber }}"

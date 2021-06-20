@@ -21,8 +21,8 @@
 - name: Ajout du fichier VHOST de nginx
   become: yes
   template:
-    src: templates/sitewordpress.conf.j2
-    dest: /etc/nginx/sites-enabled/sitewordpress.conf
+    src: templates/notreSite.conf.j2
+    dest: /etc/nginx/sites-enabled/notreSite.conf
   notify: "Restart service Nginx"
 
 - name: Ajout de conf php-fpm
@@ -41,67 +41,66 @@
 #  notify: "Restart service Orchestrator"
 
 
-################################## Telechargement Wordpress unzip et supression ##################################
+################################## Ajout de notre site ##################################
+
+- name: Ajout de notre site internet
+  become: yes
+  template:
+    src: templates/{{ item }}.j2
+    dest: /var/www/notreSite/{{ item }}
+  notify: "Restart service Nginx"
+  while:
+    - index.php
+    - head.php
+    - config.php
 
 
-- name: Telechargement WordPress
-  become : yes
-  get_url:               # Télécharger wordpress et le placer dans /var/www
-    url: http://fr.wordpress.org/latest-fr_FR.tar.gz
-    dest: /var/www/latest-fr_FR.tar.gz
-    force_basic_auth: yes
-
-- name: Unzip wordpress
-  become : yes
-  unarchive:             # décomprésser l'archive = création d'un dossier wordpres
-    src: /var/www/latest-fr_FR.tar.gz
-    dest: /var/www/
-    remote_src: yes
-
-- name: supprimer le tar gz
-  become : yes
-  file:                  # suprimmer l'archive
-    path: /var/www/latest-fr_FR.tar.gz
-    state: absent
-
-# Modification droits sur le dossier, CORRECT?????????
-- name: Modification des droits sur le dossier wordpress
+# Modification droits sur le dossier
+- name: Modification des droits sur notreSite
   become: yes
   file:
-    path: /var/www/wordpress
+    path: /var/www/notreSite
     mode: '0700'
     owner: www-data
     group: www-data
 
 
-# 
-##Exemple d'ajout de dossier dans la machine avec des tours
-#- name: Ajout des scripts orchestrator (Debian)
-  # become: yes
-  # template:
-  #   src: templates/{{ item }}.j2
-  #   dest: /var/tmp/{{ item }}
-  # loop: 
-  #   - prefailover.py
-  #   - postfailover.py
-  #   - ifDownPsql.py
-  #   - upOldMaster.py
+- name: création des certificats
+  become: yes
+  local_action: openssl_certificate
+  args: 
+    path: /etc/ssl/crt/notreSite.crt
+    privatekey_path: /etc/ssl/private/notreSite.pem
+    csr_path: /etc/ssl/csr/notreSite.csr
+    provider: selfsigned
+
+# Exemple d'ajout de dossier dans la machine avec des tours
+  #- name: Ajout des scripts orchestrator (Debian)
+    # become: yes
+    # template:
+    #   src: templates/{{ item }}.j2
+    #   dest: /var/tmp/{{ item }}
+    # loop: 
+    #   - prefailover.py
+    #   - postfailover.py
+    #   - ifDownPsql.py
+    #   - upOldMaster.py
   
 # Exemple de modification des droits sur plusieurs fichiers ajoutés
-# - name: Modification des droits sur les scripts orchestrator (Debian)
-#   become: yes
-#   file:
-#     path: /var/tmp/{{ item }}
-#     mode: '0600'
-#   loop: 
-#     - prefailover.py
-#     - postfailover.py
-#     - ifDownPsql.py
-#     - upOldMaster.py
-#   notify: "Restart service Orchestrator"
+  # - name: Modification des droits sur les scripts orchestrator (Debian)
+  #   become: yes
+  #   file:
+  #     path: /var/tmp/{{ item }}
+  #     mode: '0600'
+  #   loop: 
+  #     - prefailover.py
+  #     - postfailover.py
+  #     - ifDownPsql.py
+  #     - upOldMaster.py
+  #   notify: "Restart service Orchestrator"
 
 
-- name: Démarrage du service nginx
+- name: Redémarrage du service nginx
   become: yes
   service: 
     name: nginx

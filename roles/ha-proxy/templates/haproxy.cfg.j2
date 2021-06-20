@@ -36,26 +36,33 @@ defaults
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
 
+backend per_ip_rates
+        stick-table type ip size 1m expire 10m store http_req_rate(10s)
+
 # On défini la partie frontend
 frontend frontend-base
         # On défini l'IP et le port sur lequel va écouter le proxy
         bind {{ primary.ip }}:{{ haproxy_port }}
+        bind {{ primary.ip }}:443 ssl crt-list /etc/ssl/private/crt-list.txt
+        http-request redirect scheme https unless { ssl_fc }
+        http-request track-sc0 src table per_ip_rates
+        http-request deny deny_status 429 if { sc_http_req_rate(0) gt 100 }
+        
         # On indique le nom de la partie backend dispo plus bas
         default_backend    backend-base
         # On active le fait de ne pas forward les requêtes avec l'IP du 
         # proxy mais avec l'IP du ou des clients
         option             forwardfor
-        http-request track-sc0 src table per_ip_rates
-        http-request deny deny_status 429 if { sc_http_req_rate(0) gt 100 }
+        http-request add-header HAip {{ ansible_host }}
+
 
 # On défini la partie backend
 backend backend-base
         # On utilise la méthode roundrobin pour le loadbalancing
         balance            roundrobin
+        cookie SERVERID insert indirect nocache
         # On défini les serveurs qui sont en backend
         {% for _host in groups["webservers"] %}
-server             {{ hostvars[_host]["ansible_hostname"] }} {{ hostvars[_host].ansible_host }}:{{ haproxy_port }} check
+server             {{ hostvars[_host]["ansible_hostname"] }} {{ hostvars[_host].ansible_host }}:{{ haproxy_port }} check cookie s{{ server_id }} ssl verify none
         {% endfor %}
 
-backend per_ip_rates
-        stick-table type ip size 1m expire 10m store http_req_rate(10s)

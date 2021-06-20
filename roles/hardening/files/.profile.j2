@@ -3,13 +3,13 @@ NC='\033[0m'
 bold='\033[1;97m'
 
 printf "\n  ${bold}----------------------------${normal}\n"
-grep "Hardening index" /var/log/lynis.log
+grep "36mHardening index" /var/log/lynis.log
 printf "  ${bold}----------------------------${normal}\n\n"
 
 sed -n '/Warnings/,/Suggestions/p' /var/log/lynis.log | sed -e '$d'
 
 MaJ=$(grep ". \[PKGS-7392\]" /var/log/lynis.log)
 
-if [ "$MaJ" ];then echo -e "${RED}Veuillez à maintenir vos paquets à jours ! ${NC}";fi
+if [ "$MaJ" ];then echo -e "${RED}Veillez à maintenir vos paquets à jours ! ${NC}";fi
 
 mesg n || true
