@@ -1,3 +1,5 @@
+---
+
 - name: Installation du paquet apt-transport-https requis pour l'installation du répo Sury (Debian)
   become: yes
   apt:

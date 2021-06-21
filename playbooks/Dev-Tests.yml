@@ -12,11 +12,11 @@
   roles:
     - { role: percona, when execution_lock is not defined }
 
-# - name: ProxySQL
-#   hosts: webservers
-#   gather_facts: no
-#   roles:
-#     - { role: proxysql, when execution_lock is not defined }
+- name: ProxySQL
+  hosts: webservers
+  gather_facts: no
+  roles:
+    - { role: proxysql, when execution_lock is not defined }
 
 - name: Nginx
   hosts: webservers

@@ -9,12 +9,34 @@
     state: latest
   when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "10" )
 
+- name: Création du fichier PEM
+  become: yes
+  local_action: shell
+  args:
+    cmd: "cat /home/ansible/ansible/roles/nginx/files/certificat.crt /home/ansible/ansible/roles/nginx/files/privatekey.key > /home/ansible/ansible/roles/ha-proxy/files/certificat.pem"
+
 - name: Ajout du fichier de configurations
   become: yes
   template:
     src: templates/haproxy.cfg.j2
     dest: /etc/haproxy/haproxy.cfg
     mode: "0640"
+
+- name: Ajout de la liste de certificat
+  become: yes
+  template:
+    src: templates/crt-list.txt.j2
+    dest: /etc/ssl/private/crt-list.txt
+    mode: "0640"
+
+- name: Copie de la clef publique
+  become: yes
+  copy:
+    src: /home/ansible/ansible/roles/ha-proxy/files/certificat.pem
+    dest: /etc/ssl/private/certificat.pem
+    owner: www-data
+    group: www-data
+    mode: 0600
 
 - name: Désactivation de haproxy au démarrage
   become: yes

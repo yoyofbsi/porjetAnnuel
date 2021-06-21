@@ -63,6 +63,6 @@ backend backend-base
         cookie SERVERID insert indirect nocache
         # On défini les serveurs qui sont en backend
         {% for _host in groups["webservers"] %}
-server             {{ hostvars[_host]["ansible_hostname"] }} {{ hostvars[_host].ansible_host }}:{{ haproxy_port }} check cookie s{{ server_id }} ssl verify none
+server             {{ hostvars[_host]["ansible_hostname"] }} {{ hostvars[_host].ansible_host }}:{{ haproxy_port }} check cookie s{{ loop.index }} ssl verify none
         {% endfor %}
 

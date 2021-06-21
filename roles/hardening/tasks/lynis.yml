@@ -80,4 +80,4 @@
     block: "{{ lookup('file', '.profile.j2') }}"
   register: lynis_user_test
   with_items: "{{ lynis_autorized_user }}"
-  failed_when: (lynis_user_test.rc != 0) or (lynis_user_test.rc != 257)
+  changed_when: (lynis_user_test.rc == 0) or (lynis_user_test.rc == 257)

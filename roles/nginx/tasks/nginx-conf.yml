@@ -43,38 +43,119 @@
 
 ################################## Ajout de notre site ##################################
 
-- name: Ajout de notre site internet
-  become: yes
-  template:
-    src: templates/{{ item }}.j2
-    dest: /var/www/notreSite/{{ item }}
-  notify: "Restart service Nginx"
-  while:
-    - index.php
-    - head.php
-    - config.php
-
-
 # Modification droits sur le dossier
 - name: Modification des droits sur notreSite
   become: yes
   file:
     path: /var/www/notreSite
     mode: '0700'
+    state: directory
     owner: www-data
     group: www-data
 
+- name: Ajout de notre site internet
+  become: yes
+  template:
+    src: templates/{{ item }}.j2
+    dest: /var/www/notreSite/{{ item }}
+    owner: www-data
+  notify: "Restart service Nginx"
+  loop:
+    - index.php
+    - head.php
+    - config.php
 
-- name: création des certificats
+# Modification droits sur le dossier
+#- name: Création du dossier pour certificats
+  #become: yes
+  #file:
+          #path: /etc/ssl/
+    #mode: '0700'
+    #state: directory
+    #owner: root
+    #   group: root
+
+# Modification droits sur le dossier
+#- name: Modification des droits sur notreSite
+#become: yes
+  #file:
+          #path: /etc/ssl/crt/
+    #mode: '0700'
+    #state: directory
+    #owner: root
+    #group: root
+
+    # Modification droits sur le dossier
+    #- name: Modification des droits sur notreSite
+  #become: yes
+  #file:
+          #path: /etc/ssl/private
+    #mode: '0700'
+    #owner: root
+    #    group: root
+
+# Modification droits sur le dossier
+
+
+      #- name: création des certificats
+      # become: yes
+      # local_action: openssl_certificate
+      #  args: 
+      #path: /etc/ssl/crt/notreSite.crt
+      #privatekey_path: /etc/ssl/private/notreSite.pem
+      #csr_path: /etc/ssl/csr/notreSite.csr
+      #provider: selfsigned
+- name: Création du répértoire des certificats
+  become: yes
+  file:
+    path: /etc/nginx/ssl
+    state: directory
+    owner: root
+    group: root
+    
+- name: création de la clef privée
+  become: yes
+  local_action: openssl_privatekey
+  args:
+     path: /home/ansible/ansible/roles/nginx/files/privatekey.key
+     size: 2048
+     mode: '0666'  
+
+- name: création de la clef publique
+  become: yes
+  local_action: openssl_csr
+  args:
+     path: /home/ansible/ansible/roles/nginx/files/publickey.csr
+     privatekey_path: /home/ansible/ansible/roles/nginx/files/privatekey.key
+
+- name: création du certificat
   become: yes
   local_action: openssl_certificate
-  args: 
-    path: /etc/ssl/crt/notreSite.crt
-    privatekey_path: /etc/ssl/private/notreSite.pem
-    csr_path: /etc/ssl/csr/notreSite.csr
-    provider: selfsigned
+  args:
+     provider: selfsigned
+     path: /home/ansible/ansible/roles/nginx/files/certificat.crt
+     privatekey_path: /home/ansible/ansible/roles/nginx/files/privatekey.key
+     csr_path: /home/ansible/ansible/roles/nginx/files/publickey.csr
 
-# Exemple d'ajout de dossier dans la machine avec des tours
+- name: Copie de la clef publique
+  become: yes
+  copy:
+    src: /home/ansible/ansible/roles/nginx/files/certificat.crt
+    dest: /etc/nginx/ssl/certificat.crt
+    owner: www-data
+    group: www-data
+    mode: 0600
+
+- name: Copie de la clef privee
+  become: yes
+  copy:
+    src: /home/ansible/ansible/roles/nginx/files/privatekey.key    
+    dest: /etc/nginx/ssl/certificat.key
+    owner: www-data
+    group: www-data
+    mode: 0600
+
+    # Exemple d'ajout de dossier dans la machine avec des tours
   #- name: Ajout des scripts orchestrator (Debian)
     # become: yes
     # template:
