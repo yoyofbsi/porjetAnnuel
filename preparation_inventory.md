@@ -53,7 +53,7 @@ nom_du_serveurs ansible_host=<IP_du_serveur> ansible_user=<ssh_user> mysql_slave
 
 <br>
 
-Exemple :
+**Exemple :**
 ```
 [haservers]
 haservers01 ansible_host=<IP> ansible_user=ansible primary=yes
