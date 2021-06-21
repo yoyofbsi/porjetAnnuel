@@ -39,7 +39,7 @@ L'objectif de cette documentation est de de recenser les différentes parties im
 
 ## Front (Heartbeat + HAProxy)
   
-  * Heartbeat est un logiciel permettant d'empêcher un SPOF en configuré à la volée une adresse IP virtuelle et en lançant HAProxy.
+  * Heartbeat est un logiciel permettant d'empêcher un SPOF en configurant à la volée une adresse IP virtuelle et en lançant HAProxy.
   * HAProxy est un logiciel qui sert de load-balancer pour les serveur Web. Il permet de repartir la charge, et de ne renvoyer que vers les serveurs actifs.
 
 ## Middle (Nginx + ProxySQL)
