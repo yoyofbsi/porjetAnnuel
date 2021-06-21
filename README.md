@@ -24,11 +24,13 @@ L'objectif de cette documentation est de de recenser les différentes parties im
 
   * [Préparation pré-déploiement](https://github.com/yoyofbsi/projetAnnuel/blob/master/preparation_deploiement.md)
 
-  * [Utiliser Ansible pour réaliser un déploiement](https://github.com/yoyofbsi/projetAnnuel/blob/master/preparation_deploiement.md)
+  * [Créer et éditer le fichier d'inventaire d'une infrastructure](https://github.com/yoyofbsi/projetAnnuel/blob/master/preparation_inventory.md)
 
   * [Créer et éditer le fichier de variables d'une infrastructure](ajouter un lien vers une page explicative)
 
   * [Utiliser un coffre fort de mot de passe (vault)](ajouter un lien vers une page explicative)
+
+  * [Utiliser Ansible pour réaliser un déploiement]()
 
 
 ## Les fonctionnalités concernant le middleware 
