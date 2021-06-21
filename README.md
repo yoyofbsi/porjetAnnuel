@@ -22,7 +22,9 @@ L'objectif de cette documentation est de de recenser les différentes parties im
 
 ## Les fondamentaux
 
-  * [Utiliser Ansible pour réaliser un déploiement](ajouter un lien vers une page explicative)
+  * [Préparation pré-déploiement](https://github.com/yoyofbsi/projetAnnuel/blob/master/preparation_deploiement.md)
+
+  * [Utiliser Ansible pour réaliser un déploiement](https://github.com/yoyofbsi/projetAnnuel/blob/master/preparation_deploiement.md)
 
   * [Créer et éditer le fichier de variables d'une infrastructure](ajouter un lien vers une page explicative)
 
