@@ -16,15 +16,21 @@ L'objectif de cette documentation est de de recenser les différentes parties im
   * ProxySQL
   * Percona Server
   * Orchestrator
+  * Fail2ban
+  * Lynis
 
 
 ## Les fondamentaux
 
-  * [Utiliser Ansible pour réaliser un déploiement](ajouter un lien vers une page explicative)
+  * [Préparation pré-déploiement](https://github.com/yoyofbsi/projetAnnuel/blob/master/preparation_deploiement.md)
+
+  * [Créer et éditer le fichier d'inventaire d'une infrastructure](https://github.com/yoyofbsi/projetAnnuel/blob/master/preparation_inventory.md)
 
   * [Créer et éditer le fichier de variables d'une infrastructure](ajouter un lien vers une page explicative)
 
   * [Utiliser un coffre fort de mot de passe (vault)](ajouter un lien vers une page explicative)
+
+  * [Utiliser Ansible pour réaliser un déploiement]()
 
 
 ## Les fonctionnalités concernant le middleware 
@@ -33,7 +39,7 @@ L'objectif de cette documentation est de de recenser les différentes parties im
 
 ## Front (Heartbeat + HAProxy)
   
-  * Heartbeat est un logiciel permettant d'empêcher un SPOF en configuré à la volée une adresse IP virtuelle et en lançant HAProxy.
+  * Heartbeat est un logiciel permettant d'empêcher un SPOF en configurant à la volée une adresse IP virtuelle et en lançant HAProxy.
   * HAProxy est un logiciel qui sert de load-balancer pour les serveur Web. Il permet de repartir la charge, et de ne renvoyer que vers les serveurs actifs.
 
 ## Middle (Nginx + ProxySQL)
@@ -45,4 +51,3 @@ L'objectif de cette documentation est de de recenser les différentes parties im
 
   * Percona-server est une base de données relationnelle.
   * Orchestrator permet de gérer automatiquement le failover d'une base de données.
-  * 
