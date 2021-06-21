@@ -16,6 +16,8 @@ L'objectif de cette documentation est de de recenser les différentes parties im
   * ProxySQL
   * Percona Server
   * Orchestrator
+  * Fail2ban
+  * Lynis
 
 
 ## Les fondamentaux
@@ -45,4 +47,3 @@ L'objectif de cette documentation est de de recenser les différentes parties im
 
   * Percona-server est une base de données relationnelle.
   * Orchestrator permet de gérer automatiquement le failover d'une base de données.
-  * 
