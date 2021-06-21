@@ -1,7 +1,7 @@
 # **Préparation avant déploiement**
 
 Condition requises :
-- Ansible 2.10 (minimum)
+- **Ansible 2.10** (minimum)
 - Avoir minimum 7 serveurs avec une configuration réseau fonctionnelle 
 
 A faire sur chacun des serveurs :
