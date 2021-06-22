@@ -22,6 +22,9 @@
   template:
     src: templates/proxysql.cnf.j2
     dest: /etc/proxysql.cnf
+    owner: proxysql
+    group: proxysql
+    mode: 0640
 
 - name: Démarrage du service proxysql
   become: yes

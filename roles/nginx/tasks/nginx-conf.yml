@@ -32,13 +32,11 @@
     dest: /etc/nginx/conf.d/php-fpm.conf
   notify: "Restart service Nginx"
 
-##Exemple modification des droits 
-#- name: Modification des droits sur le fichier de configuration d'orchestrator
-#  become: yes
-#  file:
-#    path: /etc/orchestrator.conf.json
-#    mode: '0600'
-#  notify: "Restart service Orchestrator"
+- name: Suppression du fichier de site par défaut
+  become: yes
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
 
 
 ################################## Ajout de notre site ##################################
@@ -105,6 +103,7 @@
       #privatekey_path: /etc/ssl/private/notreSite.pem
       #csr_path: /etc/ssl/csr/notreSite.csr
       #provider: selfsigned
+      
 - name: Création du répértoire des certificats
   become: yes
   file:

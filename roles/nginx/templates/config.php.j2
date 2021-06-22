@@ -2,7 +2,7 @@
 
 try
 {
-	$bdd = new PDO('mysql:host=127.0.0.1:6032;dbname=main', 'user', 'user');
+	$bdd = new PDO('mysql:host=127.0.0.1:6032;dbname=main', '{{ psql.user }}', '{{ psql.mdp }}');
 }
 catch (Exception $e)
 {

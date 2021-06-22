@@ -2,19 +2,35 @@
 
 ################################ Téléchargement / Installation de ProxySQL ###########################################
 
+- name: Installation de mariadb-client (Debian)
+  become: yes
+  apt:
+    name: "mariadb-client"
+    state: latest
+  when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "10" )
+
+
 - name: Ajout de la clé de dépôt ProxySQL
   become: yes
   apt_key:
     url: "https://repo.proxysql.com/ProxySQL/repo_pub_key"
     state: present
 
+- name: Téléchargement du dépot Proxysql (Debian 10)
+  become: yes
+  apt_repository:
+    repo: "deb https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/{{ ansible_lsb.codename }}/"
+    state: present
+    #filename: proxysql
+  when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "10" )
+
+
 - name: Installation de proxysql (Debian)
   become: yes
   apt:
-    name: "{{ deb_nginx_php }}"
+    name: "proxysql"
     state: latest
   when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "10" )
-
 
 
 - include: proxysql-conf.yml

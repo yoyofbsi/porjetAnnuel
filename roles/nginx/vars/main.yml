@@ -37,19 +37,19 @@ deb_nginx_php:
     - php7.3-fpm
 
 
-############## Variables Percona / Orchestrator / Proxysql ######################
+############## Variables nginx ######################
 
-# wordpress: 
-#     topologyUser: orchestrator
-#     topologyPassword: orchestrator
-#     user: orchestrator
-#     password: orchestrator
 
 #server_id: "{{ inventory_hostname | ansibleHostnameNumber }}"
 
-orch_alias: webservers
-
 ############################ Variables à mettre dans le Vault ######################################################
+psql:
+    user: user
+    mdp: user #a envoyer dans le vault
+
+mysql_site:
+    user: site_user
+    mdp: site_user #a envoyer dans le vault
 
 rep_passwd: root
 

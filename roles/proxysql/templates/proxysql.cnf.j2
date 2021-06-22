@@ -100,7 +100,7 @@ mysql_servers =
 #		hostgroup=0
 #		max_connections=200
 #	},
-{% for _host in groups["webservers"] %}
+{% for _host in groups["dbservers"] %}
 {% if mysql_slave_of is not defined %}
 	{ address="{{ hostvars[_host].ansible_host }}" , port=3306 , hostgroup=0 }{{ "," if not loop.last else ""}}
 {% else %}
@@ -125,7 +125,7 @@ mysql_users:
 		password = "{{ mysql_site.mdp }}" # default: ''
 		default_hostgroup = 0 # default: 0
 		active = 1            # default: 1
-	},
+	}
 #	{
 #		username = "root"
 #		password = ""

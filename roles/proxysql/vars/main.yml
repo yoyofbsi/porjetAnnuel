@@ -2,9 +2,9 @@
 
 
 psql:
-    user: admin2
-    mdp: admin2 #a envoyer dans le vault
+    user: user
+    mdp: user #a envoyer dans le vault
 
 mysql_site:
     user: site_user
-    mdp: site_user
+    mdp: site_user #a envoyer dans le vault

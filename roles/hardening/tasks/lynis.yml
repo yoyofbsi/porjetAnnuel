@@ -35,9 +35,21 @@
 
 ################## Lancement de Lynis et ajout d'un Banner MOTD #######################
 
+- name: Création du group lynis
+  group:
+    name: lynis
+    state: present
+
+- name: Ajout des administrateur au groupe lynis
+  user:
+    name: "{{ item }}"
+    groups: "lynis"
+    append: yes
+  with_items: "{{ lynis_autorized_user }}"
+
 - name: Lancement de Lynis
   become: yes
-  shell: "/usr/sbin/lynis audit system > /var/log/lynis.log"
+  shell: "/usr/sbin/lynis audit system > /var/log/lynis.log && chown lynis:lynis /var/log/lynis.log"
   register: test_lynis
   when: lynis_first_try == "On" or lynis_first_try == "on"
 
@@ -47,7 +59,7 @@
     name: "Lynis verif. Secu"
     hour: "4"
     user: root
-    job: "/usr/sbin/lynis audit system > /var/log/lynis.log"
+    job: "/usr/sbin/lynis audit system > /var/log/lynis.log && chown lynis:lynis /var/log/lynis.log"
     cron_file: "lynis"
 
 - name: Suppression des lignes pré-éxistantes dans le profil root
@@ -72,7 +84,6 @@
     path: /root/.profile
     block: "{{ lookup('file', '.profile.j2') }}"
 
-# à modifier pour le failed_when (accepter 0 et 257)
 - name: Ajout des lignes d'informations Lynis dans le profil des administrateur
   become: yes
   blockinfile:
@@ -80,4 +91,4 @@
     block: "{{ lookup('file', '.profile.j2') }}"
   register: lynis_user_test
   with_items: "{{ lynis_autorized_user }}"
-  changed_when: (lynis_user_test.rc == 0) or (lynis_user_test.rc == 257)
+  #changed_when: (lynis_user_test.rc == 0) or (lynis_user_test.rc == 257)
