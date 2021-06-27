@@ -31,8 +31,8 @@ orch_log: /var/log/orchestrator/orch.log
 orch_error_log: /var/log/orchestrator/error.log
 
 psql:
-    user: admin2
-    mdp: admin2 #a envoyer dans le vault
+    user: user
+    mdp: user #a envoyer dans le vault
 
 # mysqldb: 
 #     user: root

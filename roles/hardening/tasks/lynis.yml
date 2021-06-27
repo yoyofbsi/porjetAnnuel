@@ -36,11 +36,13 @@
 ################## Lancement de Lynis et ajout d'un Banner MOTD #######################
 
 - name: Création du group lynis
+  beome: yes
   group:
     name: lynis
     state: present
 
 - name: Ajout des administrateur au groupe lynis
+  become: yes
   user:
     name: "{{ item }}"
     groups: "lynis"

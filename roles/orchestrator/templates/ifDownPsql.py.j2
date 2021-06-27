@@ -51,6 +51,6 @@ def ifDownPsql(PROXYSQL_HOST):
             txt = "Le " + str(txt) + " : " + str(e) + "\n"
             writeIn(txt,True)
 
-Master=input("\nSaisir le hostname du Master à ajouter dans le groupe d'écriture:\n")
+Master=input("\nSaisir l'IP du Master à ajouter dans le groupe d'écriture:\n")
 for i in range(len(PROXYSQL_HOST)):
     ifDownPsql(PROXYSQL_HOST[i])

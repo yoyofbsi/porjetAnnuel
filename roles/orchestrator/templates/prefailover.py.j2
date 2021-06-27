@@ -3,6 +3,7 @@
 # Update ProxySQL mysql_servers table
 # 1 argument (ORC_FAILED_HOST)
 
+import subprocess
 import sys
 import os
 import datetime
@@ -13,6 +14,15 @@ OldMaster=str(sys.argv[1])
 PROXYSQL_HOST=[{% for _host in groups["proxysql"] -%}
 "{{ hostvars[_host]["ansible_default_ipv4"]["address"] }}"{{ "," if not loop.last else ""}}
 {%- endfor %}]
+
+COMMAND="getent hosts "+OldMaster
+ip=subprocess.Popen(COMMAND, shell=True, stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+ip=str(ip.stdout.read())[2:-2]
+print(ip)
+if ip.split(' ')[0] != "127.0.1.1":
+    OldMaster=ip.split(' ')[0]
+else:
+    OldMaster=ip.split('\\n')[1].split(' ')[0]
 
 def writeIn(txt, error):
     path = "{{ orch_log }}"

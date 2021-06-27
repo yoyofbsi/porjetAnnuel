@@ -3,18 +3,32 @@
 # Update ProxySQL mysql_servers table
 # 3 arguments (ORC_FAILED_HOST / ORC_SUCCESSOR_HOST / ORC_COMMAND)
 
+import subprocess
 import sys
 import os
 import datetime
 import MySQLdb
 
-#Voir pour la récupération des variables du hooks
 OldMaster=str(sys.argv[1])
 NewMaster=str(sys.argv[2])
 PROXYSQL_HOST=[{% for _host in groups["proxysql"] -%}
 "{{ hostvars[_host]["ansible_default_ipv4"]["address"] }}"{{ "," if not loop.last else ""}}
 {%- endfor %}]
 Orc_Command=str(sys.argv[3])
+
+def ip_by_host(hostname):
+    COMMAND="getent hosts "+hostname
+    ip=subprocess.Popen(COMMAND, shell=True, stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+    ip=str(ip.stdout.read())[2:-2]
+    print(ip)
+    if ip.split(' ')[0] != "127.0.1.1":
+        ip=ip.split(' ')[0]
+    else:
+        ip=ip.split('\\n')[1].split(' ')[0]
+    return ip
+
+OldMaster=ip_by_host(OldMaster)
+NewMaster=ip_by_host(NewMaster)
 
 def writeIn(txt, error):
     path = "{{ orch_log }}"
@@ -38,15 +52,17 @@ def postfailover(PROXYSQL_HOST):
         #cursor.execute("LOAD MYSQL SERVERS TO RUNTIME;")
         #cursor.execute("SAVE MYSQL SERVERS TO DISK;")
 
+        # A modifié pour avoir le master en Lecture/écriture (groupes 0 et 1)
         if Orc_Command == "graceful-master-takeover":
-            cursor.execute("INSERT INTO mysql_servers(hostgroup_id,hostname,port,status) values (1,%s,3306,'ONLINE');",(OldMaster,))
+            #cursor.execute("INSERT INTO mysql_servers(hostgroup_id,hostname,port,status) values (1,%s,3306,'ONLINE');",(OldMaster,))
             #cursor.execute("LOAD MYSQL SERVERS TO RUNTIME;")
             #cursor.execute("SAVE MYSQL SERVERS TO DISK;")      
-            conn.commit()
-            conn.close()
-            txt = datetime.datetime.today().strftime("%A %d %B %Y à %H:%M:%S")
-            txt = "Le " + str(txt) + " : " + "Postfailover réussi. (envoi vers " + PROXYSQL_HOST + ")\n"
-            writeIn(txt,False)
+            #conn.commit()
+            #conn.close()
+
+        txt = datetime.datetime.today().strftime("%A %d %B %Y à %H:%M:%S")
+        txt = "Le " + str(txt) + " : " + "Postfailover réussi. (envoi vers " + PROXYSQL_HOST + ")\n"
+        writeIn(txt,False)
 
     except MySQLdb.OperationalError as e:
             txt = datetime.datetime.today().strftime("%A %d %B %Y à %H:%M:%S")

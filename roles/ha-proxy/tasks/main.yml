@@ -34,9 +34,9 @@
   copy:
     src: /home/ansible/ansible/roles/ha-proxy/files/certificat.pem
     dest: /etc/ssl/private/certificat.pem
-    owner: www-data
-    group: www-data
-    mode: 0600
+    owner: root
+    group: root
+    mode: 0640
 
 - name: Désactivation de haproxy au démarrage
   become: yes

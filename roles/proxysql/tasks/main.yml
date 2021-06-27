@@ -19,9 +19,9 @@
 - name: Téléchargement du dépot Proxysql (Debian 10)
   become: yes
   apt_repository:
-    repo: "deb https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/{{ ansible_lsb.codename }}/"
+    repo: "deb https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/{{ ansible_lsb.codename }}/ ./"
     state: present
-    #filename: proxysql
+    filename: proxysql
   when: ( ansible_distribution == "Debian" and ansible_distribution_major_version == "10" )
 
 

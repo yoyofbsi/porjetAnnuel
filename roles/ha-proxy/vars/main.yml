@@ -1,6 +1,6 @@
 ---
 
-haproxy_port: 80
+#haproxy_port: 443
 
 # Variable local à gérer par l'utilisateur
 primary:

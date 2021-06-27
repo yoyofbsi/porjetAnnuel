@@ -68,7 +68,7 @@ def changeMaster():
         writeIn(txt, True)
 
 #Fonction pour mettre à jour les proxySQL
-def prefailover(PROXYSQL_HOST):
+def upOldMaster(PROXYSQL_HOST):
     try:
         conn = MySQLdb.connect(PROXYSQL_HOST,'{{ psql.user }}','{{ psql.mdp }}','monitor',port=6032)
         cursor = conn.cursor()
@@ -101,4 +101,4 @@ changeMaster()
 old = input("Saisir le hostname du serveur à rajouter dans le groupe de lecture :\n")
 #Envoi à Psql
 for i in range(len(PROXYSQL_HOST)):
-    ifDownPsql(PROXYSQL_HOST[i])
+    upOldMaster(PROXYSQL_HOST[i])
