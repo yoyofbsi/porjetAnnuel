@@ -17,7 +17,7 @@
     name: nginx
     enabled: yes
 
-##??
+
 - name: Ajout du fichier VHOST de nginx
   become: yes
   template:
@@ -63,46 +63,7 @@
     - head.php
     - config.php
 
-# Modification droits sur le dossier
-#- name: Création du dossier pour certificats
-  #become: yes
-  #file:
-          #path: /etc/ssl/
-    #mode: '0700'
-    #state: directory
-    #owner: root
-    #   group: root
-
-# Modification droits sur le dossier
-#- name: Modification des droits sur notreSite
-#become: yes
-  #file:
-          #path: /etc/ssl/crt/
-    #mode: '0700'
-    #state: directory
-    #owner: root
-    #group: root
-
-    # Modification droits sur le dossier
-    #- name: Modification des droits sur notreSite
-  #become: yes
-  #file:
-          #path: /etc/ssl/private
-    #mode: '0700'
-    #owner: root
-    #    group: root
-
-# Modification droits sur le dossier
-
-
-      #- name: création des certificats
-      # become: yes
-      # local_action: openssl_certificate
-      #  args: 
-      #path: /etc/ssl/crt/notreSite.crt
-      #privatekey_path: /etc/ssl/private/notreSite.pem
-      #csr_path: /etc/ssl/csr/notreSite.csr
-      #provider: selfsigned
+############ Gestion et création des certificats en local ############
       
 - name: Création du répértoire des certificats
   become: yes
@@ -136,6 +97,8 @@
      privatekey_path: /home/ansible/ansible/roles/nginx/files/privatekey.key
      csr_path: /home/ansible/ansible/roles/nginx/files/publickey.csr
 
+############ Ajout des certificats sur le server web ############
+
 - name: Copie de la clef publique
   become: yes
   copy:
@@ -154,31 +117,7 @@
     group: www-data
     mode: 0600
 
-    # Exemple d'ajout de dossier dans la machine avec des tours
-  #- name: Ajout des scripts orchestrator (Debian)
-    # become: yes
-    # template:
-    #   src: templates/{{ item }}.j2
-    #   dest: /var/tmp/{{ item }}
-    # loop: 
-    #   - prefailover.py
-    #   - postfailover.py
-    #   - ifDownPsql.py
-    #   - upOldMaster.py
-  
-# Exemple de modification des droits sur plusieurs fichiers ajoutés
-  # - name: Modification des droits sur les scripts orchestrator (Debian)
-  #   become: yes
-  #   file:
-  #     path: /var/tmp/{{ item }}
-  #     mode: '0600'
-  #   loop: 
-  #     - prefailover.py
-  #     - postfailover.py
-  #     - ifDownPsql.py
-  #     - upOldMaster.py
-  #   notify: "Restart service Orchestrator"
-
+############ reboot de nginx pour le final ############
 
 - name: Redémarrage du service nginx
   become: yes

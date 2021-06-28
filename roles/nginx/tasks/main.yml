@@ -1,6 +1,6 @@
 ---
 
-################################ Téléchargement / Installation d'Orchestrator ###########################################
+################################ Téléchargement / Installation de NGINX ###########################################
 
 - name: Installation de nginx et PHP (Debian)
   become: yes
